@@ -25,8 +25,8 @@ class DAE:
                                      initializer=self.weight_initializer)
             self.W_4=tf.get_variable(name='weight_4', shape=(self.FLAGS.num_h,self.FLAGS.num_v), 
                                      initializer=self.weight_initializer)
-            '' 'add  one more layer here'''
-        
+            '' ' option1: add  one more layer here'''
+
         with tf.name_scope('biases'):
             self.b1=tf.get_variable(name='bias_1', shape=(self.FLAGS.num_h), 
                                     initializer=self.bias_initializer)
@@ -45,6 +45,9 @@ class DAE:
         
         with tf.name_scope('inference'):
              a1=tf.nn.sigmoid(tf.nn.bias_add(tf.matmul(x, self.W_1),self.b1))
+
+             '''  change from sigmod function to relu function'''
+
              a2=tf.nn.sigmoid(tf.nn.bias_add(tf.matmul(a1, self.W_2),self.b2))
              a3=tf.nn.sigmoid(tf.nn.bias_add(tf.matmul(a2, self.W_3),self.b3))
              '' 'add  one more layer here'''
