@@ -25,6 +25,7 @@ class DAE:
                                      initializer=self.weight_initializer)
             self.W_4=tf.get_variable(name='weight_4', shape=(self.FLAGS.num_h,self.FLAGS.num_v), 
                                      initializer=self.weight_initializer)
+            '' 'add  one more layer here'''
         
         with tf.name_scope('biases'):
             self.b1=tf.get_variable(name='bias_1', shape=(self.FLAGS.num_h), 
@@ -33,6 +34,7 @@ class DAE:
                                     initializer=self.bias_initializer)
             self.b3=tf.get_variable(name='bias_3', shape=(self.FLAGS.num_h), 
                                     initializer=self.bias_initializer)
+            '' 'add  one more layer here'''
         
     def _inference(self, x):
         ''' Making one forward pass. Predicting the networks outputs.
@@ -44,8 +46,11 @@ class DAE:
         with tf.name_scope('inference'):
              a1=tf.nn.sigmoid(tf.nn.bias_add(tf.matmul(x, self.W_1),self.b1))
              a2=tf.nn.sigmoid(tf.nn.bias_add(tf.matmul(a1, self.W_2),self.b2))
-             a3=tf.nn.sigmoid(tf.nn.bias_add(tf.matmul(a2, self.W_3),self.b3))   
-             a4=tf.matmul(a3, self.W_4) 
+             a3=tf.nn.sigmoid(tf.nn.bias_add(tf.matmul(a2, self.W_3),self.b3))
+             '' 'add  one more layer here'''
+             '' 'update the predication function'''
+             ''' a4=tf.matmul(a3, self.W_4) '''
+
         return a4
     
     def _compute_loss(self, predictions, labels,num_labels):
@@ -85,7 +90,9 @@ class DAE:
         if self.FLAGS.l2_reg==True:
             l2_loss = tf.add_n([tf.nn.l2_loss(v) for v in tf.trainable_variables()])
             MSE_loss = MSE_loss +  self.FLAGS.lambda_ * l2_loss
-        
+
+        ''' try  to use L1 regulization'''
+
         train_op=tf.train.AdamOptimizer(self.FLAGS.learning_rate).minimize(MSE_loss)
         RMSE_loss=tf.sqrt(MSE_loss)
 
