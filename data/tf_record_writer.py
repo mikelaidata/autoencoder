@@ -40,47 +40,41 @@ def bytes_feature(value):
 def main():
     ''' Writes the .txt training and testing data into binary TF_Records.'''
 
-    SAMPLES_PER_FILES=100
-    
-    training_set, test_set=_get_dataset(sys.argv[1])
+    SAMPLES_PER_FILES = 100
+
+    training_set, test_set = _get_dataset(sys.argv[1])
 
     for data_set, name, dir_ in zip([training_set, test_set], ['train', 'test'], [sys.argv[2], sys.argv[3]]):
-        
-        num_samples=len(data_set)
+
+        num_samples = len(data_set)
         i = 0
         fidx = 1
 
         while i < num_samples:
-           
+
             tf_filename = _get_output_filename(dir_, fidx,  name=name)
-            
+
             with tf.python_io.TFRecordWriter(tf_filename) as tfrecord_writer:
-                
+
                 j = 0
-                
                 while i < num_samples and j < SAMPLES_PER_FILES:
-                    
                     sys.stdout.write('\r>> Converting sample %d/%d' % (i+1, num_samples))
                     sys.stdout.flush()
-    
+
                     sample = data_set[i]
                     _add_to_tfrecord(sample, tfrecord_writer)
-                    
                     i += 1
                     j += 1
                 fidx += 1
 
     print('\nFinished converting the dataset!')
 
-    
-    
-    
+
 if __name__ == "__main__":
 
     #main(output_dir=[OUTPUT_DIR_TRAIN,OUTPUT_DIR_TEST])
     main()
-            
-    
+
 
 
 

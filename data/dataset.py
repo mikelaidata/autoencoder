@@ -8,7 +8,7 @@ def _get_training_data(FLAGS):
     @return data for the inference
     '''
     
-    filenames=[FLAGS.tf_records_train_path+f for f in os.listdir(FLAGS.tf_records_train_path)]
+    filenames = [os.path.join(FLAGS.tf_records_train_path, f) for f in os.listdir(FLAGS.tf_records_train_path)]
     
     dataset = tf.data.TFRecordDataset(filenames)
     dataset = dataset.map(parse)
@@ -23,33 +23,33 @@ def _get_training_data(FLAGS):
     dataset2 = dataset2.repeat()
     dataset2 = dataset2.batch(1)
     dataset2 = dataset2.prefetch(buffer_size=1)
-    
+
     return dataset, dataset2
-    
+
 
 def _get_test_data(FLAGS):
     ''' Buildind the input pipeline for test data.'''
-    
-    filenames=[FLAGS.tf_records_test_path+f for f in os.listdir(FLAGS.tf_records_test_path)]
-    
+
+    filenames = [os.path.join(FLAGS.tf_records_test_path, f) for f in os.listdir(FLAGS.tf_records_test_path)]
+
     dataset = tf.data.TFRecordDataset(filenames)
     dataset = dataset.map(parse)
     dataset = dataset.shuffle(buffer_size=1)
     dataset = dataset.repeat()
     dataset = dataset.batch(1)
     dataset = dataset.prefetch(buffer_size=1)
-    
+
     return dataset
 
 
 def parse(serialized):
     ''' Parser fot the TFRecords file.'''
-    
-    features={'movie_ratings':tf.FixedLenFeature([3952], tf.float32),  
+
+    features = {'movie_ratings':tf.FixedLenFeature([3952], tf.float32),  
               }
-    parsed_example=tf.parse_single_example(serialized,
+    parsed_example = tf.parse_single_example(serialized,
                                            features=features,
                                            )
     movie_ratings = tf.cast(parsed_example['movie_ratings'], tf.float32)
-     
+    
     return movie_ratings
